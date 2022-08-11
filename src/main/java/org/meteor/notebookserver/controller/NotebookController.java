@@ -28,4 +28,10 @@ public class NotebookController {
     public RespPageBean downloadNotebooks(Long userId){
         return notebookService.downloadNotebook(userId);
     }
+
+    @GetMapping("/test")
+    public String test(String name){
+        System.out.println(name);
+        return name + "!!!";
+    }
 }

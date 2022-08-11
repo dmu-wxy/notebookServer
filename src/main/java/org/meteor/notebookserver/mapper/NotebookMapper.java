@@ -2,17 +2,21 @@ package org.meteor.notebookserver.mapper;
 
 
 import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.meteor.notebookserver.model.Notebook;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Mapper
+@Repository
 public interface NotebookMapper {
     @Insert({
             "<script>",
             "insert into notebook(title,content,lastChangeTime) values ",
-            "<foreach collection='notebooks' separator',' item='notebook'>",
+            "<foreach collection='notebooks' separator=',' item='notebook'>",
             "(#{notebook.title},#{notebook.content},#{notebook.lastChangeTime})",
             "</foreach>",
             "</script>"
@@ -21,4 +25,5 @@ public interface NotebookMapper {
 
     @Select("select * from notebook n,user_notebook un where n.id = un.noteboot_id and un.user_id = #{userId}")
     public List<Notebook> queryMy(Long userId);
+
 }

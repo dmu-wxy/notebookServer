@@ -1,15 +1,16 @@
 package org.meteor.notebookserver.controller;
 
+import io.jsonwebtoken.Claims;
 import org.meteor.notebookserver.entity.Notebook;
+import org.meteor.notebookserver.entity.UserInfo;
 import org.meteor.notebookserver.model.RespBean;
 import org.meteor.notebookserver.model.RespPageBean;
-import org.meteor.notebookserver.service.NotebookServiceImpl;
+import org.meteor.notebookserver.service.NotebookService;
+import org.meteor.notebookserver.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -17,16 +18,24 @@ import java.util.List;
 public class NotebookController {
 
     @Autowired
-    private NotebookServiceImpl notebookService;
+    private NotebookService notebookService;
 
-    @PostMapping("/update")
-    public RespBean updateNotebooks(List<Notebook> notebooks,Long userId){
-        return notebookService.updateNotebook(notebooks,userId);
+    @PostMapping("/upload")
+    public RespBean updateNotebooks(@RequestBody List<Notebook> notebooks, @RequestHeader String token){
+        UserInfo userInfo = JwtUtil.geTokenInfo(token);
+        if(userInfo == null) {
+            return RespBean.AUTH_ERROR("未登录");
+        }
+        return notebookService.updateNotebook(notebooks,userInfo.getId());
     }
 
     @GetMapping("/download")
-    public RespPageBean downloadNotebooks(Long userId){
-        return notebookService.downloadNotebook(userId);
+    public RespBean downloadNotebooks(@RequestHeader String token){
+        UserInfo userInfo = JwtUtil.geTokenInfo(token);
+        if(userInfo == null) {
+            return RespBean.AUTH_ERROR("未登录");
+        }
+        return RespBean.ok("同步成功",notebookService.downloadNotebook(userInfo.getId()));
     }
 
     @GetMapping("/test")

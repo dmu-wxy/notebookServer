@@ -1,13 +1,11 @@
 package org.meteor.notebookserver.mapper;
 
 
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 import org.meteor.notebookserver.entity.Notebook;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Mapper
@@ -15,15 +13,28 @@ import java.util.List;
 public interface NotebookMapper {
     @Insert({
             "<script>",
-            "insert into notebook(title,content,lastChangeTime) values ",
+            "insert into notebookinfo(id,title,content,lastChangeTime,createTime) values ",
             "<foreach collection='notebooks' separator=',' item='notebook'>",
-            "(#{notebook.title},#{notebook.content},#{notebook.lastChangeTime})",
+            "(#{notebook.id},#{notebook.title},#{notebook.content},#{notebook.lastChangeTime},#{notebook.createTime})",
             "</foreach>",
             "</script>"
     })
-    public int insert(@Param("notebooks") List<Notebook> notebooks);
+    void saveNotebook(@Param("notebooks") List<Notebook> notebooks);
 
-    @Select("select * from notebook n,user_notebook un where n.id = un.noteboot_id and un.user_id = #{userId}")
+    @Insert({
+            "<script>",
+            "insert into user_notebook(userId,notebookId) values ",
+            "<foreach collection='notebooks' separator=',' item='notebook'>",
+            "(#{userId},#{notebook.id})",
+            "</foreach>",
+            "</script>"
+    })
+    void saveUserNotebook(List<Notebook> notebooks,Long userId);
+
+    @Delete("delete from notebookinfo where id in (select notebookId from user_notebook where userId = #{userId})")
+    void deleteNotebookByUserId(Long userId);
+
+    @Select("select * from notebookinfo n,user_notebook un where n.id = un.notebookId and un.userId = #{userId}")
     public List<Notebook> queryMy(Long userId);
 
 }

@@ -11,7 +11,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Notebook implements Serializable {
-    private int id;
+    private Long id;
     private String title;
     private String content;
     private Date lastChangeTime;

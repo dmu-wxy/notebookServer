@@ -4,13 +4,12 @@ import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.meteor.notebookserver.entity.UserInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.*;
-import java.io.UnsupportedEncodingException;
 import java.security.Key;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
 
@@ -29,6 +28,7 @@ public class JwtUtil {
     //Token过期时间（毫秒）
     private static final int expiresSecond =  24 * 3600 * 1000;//1天
 
+    private static Logger logger = LoggerFactory.getLogger(JwtUtil.class);
 
     /**
      * 解析jwt
@@ -85,13 +85,15 @@ public class JwtUtil {
      */
     public static UserInfo geTokenInfo(String Token) {
         Claims claims = JwtUtil.parseJWT(Token);
-        UserInfo userInfo = new UserInfo();
+        UserInfo userInfo = null;
         try {
             if (claims != null) {
+                userInfo = new UserInfo();
                 userInfo.setId(Long.valueOf(String.valueOf(claims.get("id"))));
                 userInfo.setUsername((String)claims.get("username"));
             }
         }catch (Exception e){
+            logger.error(e.getMessage());
         }
         return userInfo;
     }

@@ -24,7 +24,6 @@ public class UserController {
     @GetMapping("/getUserInfo")
     public UserInfo getUser(String username){
         UserInfo user = userService.getUser(username);
-        user = new UserInfo();
         return user;
     }
 

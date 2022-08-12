@@ -26,6 +26,10 @@ public class RespBean {
         return new RespBean(500, msg, obj);
     }
 
+    public static RespBean AUTH_ERROR(String msg) {
+        return new RespBean(401, msg, null);
+    }
+
     private RespBean() {
     }
 

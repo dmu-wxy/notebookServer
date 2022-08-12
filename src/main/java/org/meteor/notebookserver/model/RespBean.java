@@ -4,7 +4,7 @@ public class RespBean {
 
     private Integer status;
     private String msg;
-    private Object obj;
+    private Object data;
 
     public static RespBean build() {
         return new RespBean();
@@ -36,7 +36,7 @@ public class RespBean {
     private RespBean(Integer status, String msg, Object obj) {
         this.status = status;
         this.msg = msg;
-        this.obj = obj;
+        this.data = obj;
     }
 
     public Integer getStatus() {
@@ -57,13 +57,22 @@ public class RespBean {
         return this;
     }
 
-    public Object getObj() {
-        return obj;
+    public Object getData() {
+        return data;
     }
 
-    public RespBean setObj(Object obj) {
-        this.obj = obj;
+    public RespBean setData(Object data) {
+        this.data = data;
         return this;
+    }
+
+    @Override
+    public String toString() {
+        return "RespBean{" +
+                "status=" + status +
+                ", msg='" + msg + '\'' +
+                ", data=" + data +
+                '}';
     }
 }
 

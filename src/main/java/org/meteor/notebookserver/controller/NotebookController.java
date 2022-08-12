@@ -1,6 +1,6 @@
 package org.meteor.notebookserver.controller;
 
-import org.meteor.notebookserver.model.Notebook;
+import org.meteor.notebookserver.entity.Notebook;
 import org.meteor.notebookserver.model.RespBean;
 import org.meteor.notebookserver.model.RespPageBean;
 import org.meteor.notebookserver.service.NotebookServiceImpl;

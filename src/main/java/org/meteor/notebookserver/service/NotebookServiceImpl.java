@@ -1,13 +1,12 @@
 package org.meteor.notebookserver.service;
 
 import org.meteor.notebookserver.mapper.NotebookMapper;
-import org.meteor.notebookserver.model.Notebook;
+import org.meteor.notebookserver.entity.Notebook;
 import org.meteor.notebookserver.model.RespBean;
 import org.meteor.notebookserver.model.RespPageBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service

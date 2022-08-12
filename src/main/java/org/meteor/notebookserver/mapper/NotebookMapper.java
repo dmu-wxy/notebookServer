@@ -5,7 +5,7 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
-import org.meteor.notebookserver.model.Notebook;
+import org.meteor.notebookserver.entity.Notebook;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

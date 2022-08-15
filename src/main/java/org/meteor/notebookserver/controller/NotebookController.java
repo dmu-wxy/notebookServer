@@ -7,6 +7,8 @@ import org.meteor.notebookserver.model.RespBean;
 import org.meteor.notebookserver.model.RespPageBean;
 import org.meteor.notebookserver.service.NotebookService;
 import org.meteor.notebookserver.util.JwtUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,12 +22,15 @@ public class NotebookController {
     @Autowired
     private NotebookService notebookService;
 
+    Logger logger = LoggerFactory.getLogger(NotebookController.class);
+
     @PostMapping("/upload")
     public RespBean updateNotebooks(@RequestBody List<Notebook> notebooks, @RequestHeader String token){
         UserInfo userInfo = JwtUtil.geTokenInfo(token);
         if(userInfo == null) {
             return RespBean.AUTH_ERROR("未登录");
         }
+        logger.info(notebooks.toString());
         return notebookService.updateNotebook(notebooks,userInfo.getId());
     }
 

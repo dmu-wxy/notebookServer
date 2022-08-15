@@ -23,18 +23,19 @@ public class NotebookService {
     public RespBean updateNotebook(List<Notebook> notebooks, Long userId){
         logger.info("userId: " + userId);
         logger.info("notebooks: " + notebooks);
+        notebookMapper.deleteNotebookByUserId(userId);
         if (notebooks.size() > 0){
             // 因为要覆盖，所以先删除之前的
-            notebookMapper.deleteNotebookByUserId(userId);
             notebookMapper.saveNotebook(notebooks);
             notebookMapper.saveUserNotebook(notebooks,userId);
         }
-        return RespBean.ok("上传成功");
+        return RespBean.ok("上传成功",notebooks.size());
     }
 
     public RespPageBean downloadNotebook(Long userId){
         List<Notebook> notebooks = notebookMapper.queryMy(userId);
         RespPageBean bean = new RespPageBean();
+        logger.info("downloadNotebook notebooks: " + notebooks);
         bean.setData(notebooks);
         bean.setTotal(Long.valueOf(notebooks.size()));
         return bean;

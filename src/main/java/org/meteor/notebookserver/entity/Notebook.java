@@ -13,7 +13,7 @@ import java.util.Date;
 public class Notebook implements Serializable {
     private Long id;
     private String title;
-    private String content;
+    private String abs;
     private Date lastChangeTime;
     private Date createTime;
 }

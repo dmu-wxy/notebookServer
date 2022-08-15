@@ -40,22 +40,29 @@ public class NotebookController {
     }
 
     @PostMapping("/uploadFile")
-    public RespBean updateNotebookFiles(MultipartFile notebook,@RequestHeader String token,@RequestHeader String originalFilePath) throws IOException {
+    public RespBean updateNotebookFiles(MultipartFile notebook,@RequestHeader String token) throws IOException {
         UserInfo userInfo = JwtUtil.geTokenInfo(token);
         if(userInfo == null) {
             return RespBean.AUTH_ERROR("未登录");
         }
         File path = ResourceUtils.getFile("classpath:");
         File uploadDir = new File(path.getAbsolutePath(),"static/file");
-        String fileName = notebook.getOriginalFilename();
-        String filePath = uploadDir.getAbsolutePath() + "/" + originalFilePath + "/" + fileName ;
-        // 保存文件
-        File saveFile = new File(filePath);
-        logger.info(saveFile.getPath());
-        if(!saveFile.exists()){
-            saveFile.mkdirs();
+
+        synchronized (NotebookController.class){
+            String fileName = notebook.getOriginalFilename();
+            // data\\user\\0\\org.meteor.notebook\\files".length()
+            fileName = fileName.substring(38);
+            String filePath = uploadDir.getAbsolutePath() + "/" + userInfo.getId();
+            // 保存文件
+//            File savePath = new File(filePath);
+            File saveFile = new File(filePath + "/" + fileName);
+            logger.info(saveFile.getPath());
+            if(!saveFile.exists()){
+                saveFile.mkdirs();
+            }
+            notebook.transferTo(saveFile);
         }
-        notebook.transferTo(saveFile);
+
         // 保存文件信息到数据库,自己根据表保存
         // 文件名
         return RespBean.ok("success");
@@ -68,6 +75,18 @@ public class NotebookController {
             return RespBean.AUTH_ERROR("未登录");
         }
         return RespBean.ok("同步成功",notebookService.downloadNotebook(userInfo.getId()));
+    }
+
+    @GetMapping("/deleteAll")
+    public RespBean deleteAll(@RequestHeader String token) throws FileNotFoundException {
+        UserInfo userInfo = JwtUtil.geTokenInfo(token);
+        if(userInfo == null) {
+            return RespBean.AUTH_ERROR("未登录");
+        }
+        File path = ResourceUtils.getFile("classpath:");
+        File uploadDir = new File(path.getAbsolutePath(),"static/file");
+        notebookService.deleteDirs(new File(uploadDir.getAbsolutePath() + "/" + userInfo.getId()));
+        return RespBean.ok("删除成功");
     }
 
     @GetMapping("/test")

@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,5 +40,20 @@ public class NotebookService {
         bean.setData(notebooks);
         bean.setTotal(Long.valueOf(notebooks.size()));
         return bean;
+    }
+
+    public void deleteDirs(File dir){
+        File[] files = dir.listFiles();
+        // 如果有文件需要先删除文件
+        if (files != null && files.length != 0){
+            for(File file : files){
+                if(file.isFile()){
+                    file.delete();
+                } else {
+                    deleteDirs(file);
+                }
+            }
+        }
+        dir.delete();
     }
 }

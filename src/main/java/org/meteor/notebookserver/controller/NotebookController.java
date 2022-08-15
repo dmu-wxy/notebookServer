@@ -10,8 +10,13 @@ import org.meteor.notebookserver.util.JwtUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,6 +37,28 @@ public class NotebookController {
         }
         logger.info(notebooks.toString());
         return notebookService.updateNotebook(notebooks,userInfo.getId());
+    }
+
+    @PostMapping("/uploadFile")
+    public RespBean updateNotebookFiles(MultipartFile notebook,@RequestHeader String token,@RequestHeader String originalFilePath) throws IOException {
+        UserInfo userInfo = JwtUtil.geTokenInfo(token);
+        if(userInfo == null) {
+            return RespBean.AUTH_ERROR("未登录");
+        }
+        File path = ResourceUtils.getFile("classpath:");
+        File uploadDir = new File(path.getAbsolutePath(),"static/file");
+        String fileName = notebook.getOriginalFilename();
+        String filePath = uploadDir.getAbsolutePath() + "/" + originalFilePath + "/" + fileName ;
+        // 保存文件
+        File saveFile = new File(filePath);
+        logger.info(saveFile.getPath());
+        if(!saveFile.exists()){
+            saveFile.mkdirs();
+        }
+        notebook.transferTo(saveFile);
+        // 保存文件信息到数据库,自己根据表保存
+        // 文件名
+        return RespBean.ok("success");
     }
 
     @GetMapping("/download")

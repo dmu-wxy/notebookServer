@@ -8,9 +8,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ResourceUtils;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 @Service
@@ -55,5 +58,27 @@ public class NotebookService {
             }
         }
         dir.delete();
+    }
+
+    public List<String> getAllDir(Long id) throws FileNotFoundException {
+        File uploadDir = new File(ResourceUtils.getFile("classpath:").getAbsolutePath(),"static/file/" + id + "/notebook");
+        File[] files = uploadDir.listFiles();
+        if(files == null || files.length == 0) return new LinkedList<>();
+        List<String> notebookList = new LinkedList<>();
+        // /file/<userId>/notebook/<notebookId>/<fileName>
+        for(File file : files){
+            if(file.isFile()){
+                // loading.gif
+                continue;
+            }
+            // 笔记文件以及笔记文件中的图片
+            File[] notebooks = file.listFiles();
+            for(File notebook : notebooks){
+                // 下载地址
+                String url = "/file/" + id + "/notebook/" + file.getName() + "/" + notebook.getName();
+                notebookList.add(url);
+            }
+        }
+        return notebookList;
     }
 }

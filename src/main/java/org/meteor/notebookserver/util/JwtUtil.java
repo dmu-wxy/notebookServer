@@ -26,7 +26,7 @@ public class JwtUtil {
     private static final String base64Secret = "MDk4ZjZiY2Q0NjIxZDM3M2NhZGU0ZTgzMjYyN2I0ZjY=";
 
     //Token过期时间（毫秒）
-    private static final int expiresSecond =  24 * 3600 * 1000;//1天
+    private static final int expiresSecond =  24 * 3600 * 1000 * 30;//30天
 
     private static Logger logger = LoggerFactory.getLogger(JwtUtil.class);
 

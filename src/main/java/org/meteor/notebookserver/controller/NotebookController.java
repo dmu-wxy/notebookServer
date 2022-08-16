@@ -54,7 +54,6 @@ public class NotebookController {
             fileName = fileName.substring(38);
             String filePath = uploadDir.getAbsolutePath() + "/" + userInfo.getId();
             // 保存文件
-//            File savePath = new File(filePath);
             File saveFile = new File(filePath + "/" + fileName);
             logger.info(saveFile.getPath());
             if(!saveFile.exists()){
@@ -63,8 +62,6 @@ public class NotebookController {
             notebook.transferTo(saveFile);
         }
 
-        // 保存文件信息到数据库,自己根据表保存
-        // 文件名
         return RespBean.ok("success");
     }
 
@@ -75,6 +72,15 @@ public class NotebookController {
             return RespBean.AUTH_ERROR("未登录");
         }
         return RespBean.ok("同步成功",notebookService.downloadNotebook(userInfo.getId()));
+    }
+
+    @GetMapping("/getDir")
+    public RespBean getAllFilesDir(@RequestHeader String token) throws FileNotFoundException {
+        UserInfo userInfo = JwtUtil.geTokenInfo(token);
+        if(userInfo == null) {
+            return RespBean.AUTH_ERROR("未登录");
+        }
+        return RespBean.ok("success",notebookService.getAllDir(userInfo.getId()));
     }
 
     @GetMapping("/deleteAll")

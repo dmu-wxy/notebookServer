@@ -5,14 +5,14 @@ spring:
   datasource:
     username: root
     password: 123456
-    url: jdbc:mysql://localhost:3306/notebook?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false
+    url: jdbc:mysql://localhost:3306/notebook?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true
     driver-class-name: com.mysql.cj.jdbc.Driver
   servlet:
     multipart:
       max-file-size: 10MB
       max-request-size: 50MB
-
-logging:
-  level:
-    org.meteor.notebookserver.mapper: debug
+#
+#logging:
+#  level:
+#    org.meteor.notebookserver.mapper: debug
 

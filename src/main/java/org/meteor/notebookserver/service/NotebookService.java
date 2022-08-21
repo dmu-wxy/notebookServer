@@ -7,6 +7,7 @@ import org.meteor.notebookserver.model.RespPageBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.system.ApplicationHome;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
 
@@ -25,8 +26,6 @@ public class NotebookService {
     private Logger logger = LoggerFactory.getLogger(NotebookService.class);
 
     public RespBean updateNotebook(List<Notebook> notebooks, Long userId){
-        logger.info("userId: " + userId);
-        logger.info("notebooks: " + notebooks);
         notebookMapper.deleteNotebookByUserId(userId);
         if (notebooks.size() > 0){
             // 因为要覆盖，所以先删除之前的
@@ -39,7 +38,6 @@ public class NotebookService {
     public RespPageBean downloadNotebook(Long userId){
         List<Notebook> notebooks = notebookMapper.queryMy(userId);
         RespPageBean bean = new RespPageBean();
-        logger.info("downloadNotebook notebooks: " + notebooks);
         bean.setData(notebooks);
         bean.setTotal(Long.valueOf(notebooks.size()));
         return bean;
@@ -61,7 +59,8 @@ public class NotebookService {
     }
 
     public List<String> getAllDir(Long id) throws FileNotFoundException {
-        File uploadDir = new File(ResourceUtils.getFile("classpath:").getAbsolutePath(),"static/file/" + id + "/notebook");
+//        File uploadDir = new File(ResourceUtils.getFile("classpath:").getAbsolutePath(),"static/file/" + id + "/notebook");
+        File uploadDir = new File(getNotebookDir() + id + "/notebook/");
         File[] files = uploadDir.listFiles();
         if(files == null || files.length == 0) return new LinkedList<>();
         List<String> notebookList = new LinkedList<>();
@@ -80,5 +79,11 @@ public class NotebookService {
             }
         }
         return notebookList;
+    }
+
+    public String getNotebookDir(){
+        ApplicationHome ah = new ApplicationHome(getClass());
+        File uploadDir = ah.getSource().getParentFile();
+        return uploadDir.getAbsolutePath() + "/file/";
     }
 }

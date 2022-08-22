@@ -13,9 +13,9 @@ import java.util.List;
 public interface NotebookMapper {
     @Insert({
             "<script>",
-            "insert into notebookinfo(id,title,abs,lastChangeTime,createTime) values ",
+            "insert into notebookinfo(id,title,abs,lastChangeTime,createTime,firstImageName) values ",
             "<foreach collection='notebooks' separator=',' item='notebook'>",
-            "(#{notebook.id},#{notebook.title},#{notebook.abs},#{notebook.lastChangeTime},#{notebook.createTime})",
+            "(#{notebook.id},#{notebook.title},#{notebook.abs},#{notebook.lastChangeTime},#{notebook.createTime},#{notebook.firstImageName})",
             "</foreach>",
             "</script>"
     })

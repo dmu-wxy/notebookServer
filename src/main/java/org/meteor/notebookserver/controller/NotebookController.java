@@ -37,7 +37,6 @@ public class NotebookController {
         if(userInfo == null) {
             return RespBean.AUTH_ERROR("未登录");
         }
-        logger.info(notebooks.toString());
         return notebookService.updateNotebook(notebooks,userInfo.getId());
     }
 
@@ -50,7 +49,7 @@ public class NotebookController {
         synchronized (NotebookController.class){
             String fileName = notebook.getOriginalFilename();
             // data\\user\\0\\org.meteor.notebook\\files".length()
-//            fileName = fileName.substring(38);
+            fileName = fileName.substring(38);
             String filePath = notebookService.getNotebookDir() + userInfo.getId();
             // 保存文件
             File saveFile = new File(filePath + "/" + fileName);
@@ -64,11 +63,11 @@ public class NotebookController {
         return RespBean.ok("success");
     }
 
-    @GetMapping("/download")
+    @GetMapping("/downloadNotebooks")
     public void downloadNotebooks(String path, @RequestHeader String token, HttpServletResponse response) throws Exception {
         UserInfo userInfo = JwtUtil.geTokenInfo(token);
         if(userInfo == null) {
-
+            return;
         }
         File file = new File(notebookService.getNotebookDir() + path);
         String filename = file.getName();
@@ -87,6 +86,15 @@ public class NotebookController {
         inputStream.close();
     }
 
+    @GetMapping("/download")
+    public RespBean download(@RequestHeader String token){
+        UserInfo userInfo = JwtUtil.geTokenInfo(token);
+        if(userInfo == null) {
+            return RespBean.AUTH_ERROR("未登录");
+        }
+        return RespBean.ok("success",notebookService.downloadNotebook(userInfo.getId()));
+    }
+
     @GetMapping("/getDir")
     public RespBean getAllFilesDir(@RequestHeader String token) throws FileNotFoundException {
         UserInfo userInfo = JwtUtil.geTokenInfo(token);
@@ -102,8 +110,7 @@ public class NotebookController {
         if(userInfo == null) {
             return RespBean.AUTH_ERROR("未登录");
         }
-        File path = ResourceUtils.getFile("classpath:");
-        File uploadDir = new File(path.getAbsolutePath(),"static/file");
+        File uploadDir = new File(notebookService.getNotebookDir());
         notebookService.deleteDirs(new File(uploadDir.getAbsolutePath() + "/" + userInfo.getId()));
         return RespBean.ok("删除成功");
     }

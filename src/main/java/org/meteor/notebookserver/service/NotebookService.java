@@ -74,7 +74,7 @@ public class NotebookService {
             File[] notebooks = file.listFiles();
             for(File notebook : notebooks){
                 // 下载地址
-                String url = "/file/" + id + "/notebook/" + file.getName() + "/" + notebook.getName();
+                String url = "/" + id + "/notebook/" + file.getName() + "/" + notebook.getName();
                 notebookList.add(url);
             }
         }

@@ -13,9 +13,9 @@ import java.util.List;
 public interface NotebookMapper {
     @Insert({
             "<script>",
-            "insert into notebookinfo(id,title,abs,lastChangeTime,createTime,firstImageName,userId) values ",
+            "insert into notebookinfo(id,title,abs,lastChangeTime,createTime,firstImageName,userId,label) values ",
             "<foreach collection='notebooks' separator=',' item='notebook'>",
-            "(#{notebook.id},#{notebook.title},#{notebook.abs},#{notebook.lastChangeTime},#{notebook.createTime},#{notebook.firstImageName},#{userId})",
+            "(#{notebook.id},#{notebook.title},#{notebook.abs},#{notebook.lastChangeTime},#{notebook.createTime},#{notebook.firstImageName},#{userId},#{notebook.label})",
             "</foreach>",
             "</script>"
     })
@@ -31,11 +31,9 @@ public interface NotebookMapper {
     })
     void saveUserNotebook(List<Notebook> notebooks,Long userId);
 
-//    @Delete("delete from notebookinfo where id in (select notebookId from user_notebook where userId = #{userId})")
     @Delete("delete from notebookinfo where userId = #{userId}")
     void deleteNotebookByUserId(Long userId);
 
-//    @Select("select * from notebookinfo n,user_notebook un where n.id = un.notebookId and un.userId = #{userId}")
     @Select("select * from notebookinfo where userId = #{userId}")
     public List<Notebook> queryMy(Long userId);
 

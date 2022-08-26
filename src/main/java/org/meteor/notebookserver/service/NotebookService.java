@@ -29,8 +29,8 @@ public class NotebookService {
         notebookMapper.deleteNotebookByUserId(userId);
         if (notebooks.size() > 0){
             // 因为要覆盖，所以先删除之前的
-            notebookMapper.saveNotebook(notebooks);
-            notebookMapper.saveUserNotebook(notebooks,userId);
+            notebookMapper.saveNotebook(notebooks,userId);
+//            notebookMapper.saveUserNotebook(notebooks,userId);
         }
         return RespBean.ok("上传成功",notebooks.size());
     }

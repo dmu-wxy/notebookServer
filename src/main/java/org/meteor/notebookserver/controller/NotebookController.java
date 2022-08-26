@@ -53,7 +53,7 @@ public class NotebookController {
             String filePath = notebookService.getNotebookDir() + userInfo.getId();
             // 保存文件
             File saveFile = new File(filePath + "/" + fileName);
-            logger.info(saveFile.getPath());
+//            logger.info(saveFile.getPath());
             if(!saveFile.exists()){
                 saveFile.mkdirs();
             }

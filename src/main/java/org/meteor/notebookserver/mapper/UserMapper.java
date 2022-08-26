@@ -10,7 +10,7 @@ public interface UserMapper {
     @Select("select * from userInfo where username = #{username}")
     UserInfo getUserByUsername(String username);
 
-    @Select("select count(*) from user_notebook where userId = #{id}")
+    @Select("select count(*) from notebookinfo where userId = #{id}")
     Integer getNotebookNumById(Long id);
 
     @Insert("insert into userInfo(username,password) values (#{username},#{password})")

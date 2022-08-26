@@ -17,4 +17,5 @@ public class Notebook implements Serializable {
     private Date lastChangeTime;
     private Date createTime;
     private String firstImageName;
+    private Long userId;
 }

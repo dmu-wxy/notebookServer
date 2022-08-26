@@ -8,6 +8,7 @@ CREATE TABLE `notebookinfo` (
   `createTime` timestamp NULL DEFAULT NULL,
   `firstImageName` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `userId` int NOT NULL,
+  `label` int DEFAULT '0',
   PRIMARY KEY (`id`,`userId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 

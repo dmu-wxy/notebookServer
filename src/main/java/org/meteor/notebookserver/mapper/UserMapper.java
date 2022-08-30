@@ -4,6 +4,8 @@ import org.apache.ibatis.annotations.*;
 import org.meteor.notebookserver.entity.UserInfo;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Mapper
 @Repository
 public interface UserMapper {
@@ -16,4 +18,10 @@ public interface UserMapper {
     @Insert("insert into userInfo(username,password) values (#{username},#{password})")
     @Options(useGeneratedKeys = true,keyProperty = "id",keyColumn = "id")
     Integer saveUser( UserInfo userInfo);
+
+    @Select("select * from userInfo")
+    List<UserInfo> getAllUsers();
+
+    @Delete("delete from userInfo where id = #{id}")
+    void deleteUser(Long id);
 }

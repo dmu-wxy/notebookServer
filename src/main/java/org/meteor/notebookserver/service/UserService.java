@@ -2,6 +2,7 @@ package org.meteor.notebookserver.service;
 
 
 import org.meteor.notebookserver.entity.UserInfo;
+import org.meteor.notebookserver.mapper.NotebookMapper;
 import org.meteor.notebookserver.mapper.UserMapper;
 import org.meteor.notebookserver.model.LoginResp;
 import org.meteor.notebookserver.model.RespBean;
@@ -18,6 +19,9 @@ import java.util.List;
 public class UserService {
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private NotebookMapper notebookMapper;
 
     Logger logger = LoggerFactory.getLogger(UserService.class);
 
@@ -55,4 +59,13 @@ public class UserService {
         return RespBean.ok("注册成功",new LoginResp(jwt,0));
     }
 
+    public List<UserInfo> getAllUsers() {
+        return userMapper.getAllUsers();
+    }
+
+    public boolean delete(Long id) {
+        notebookMapper.deleteNotebookByUserId(id);
+        userMapper.deleteUser(id);
+        return true;
+    }
 }

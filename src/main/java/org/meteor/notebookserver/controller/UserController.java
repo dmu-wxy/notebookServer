@@ -34,4 +34,16 @@ public class UserController {
     public RespBean register(@RequestBody UserInfo userInfo){
         return userService.register(userInfo);
     }
+
+    @GetMapping("/getAllUsers")
+    public List<UserInfo> getAllUsers(String adminPass){
+        if(!"Meteor123.".equals(adminPass)) return null;
+        return userService.getAllUsers();
+    }
+
+    @GetMapping("/delete")
+    public boolean deleteUserById(Long id,String adminPass){
+        if(!"Meteor123.".equals(adminPass)) return false;
+        return userService.delete(id);
+    }
 }

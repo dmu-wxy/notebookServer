@@ -54,8 +54,9 @@ public class UserService {
         if(user != null){
             return RespBean.AUTH_ERROR("用户已存在");
         }
-        Integer id = userMapper.saveUser(userInfo);
-        String jwt = JwtUtil.createJWT(String.valueOf(id),username);
+        userMapper.saveUser(userInfo);
+        logger.info("" + userInfo.getId());
+        String jwt = JwtUtil.createJWT(String.valueOf(userInfo.getId()),username);
         return RespBean.ok("注册成功",new LoginResp(jwt,0));
     }
 
